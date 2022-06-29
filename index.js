@@ -1,16 +1,3 @@
-// const num = new Map([
-//   ["0", "๐"],
-//   ["1", "๑"],
-//   ["2", "๒"],
-//   ["3", "๓"],
-//   ["4", "๔"],
-//   ["5", "๕"],
-//   ["6", "๖"],
-//   ["7", "๗"],
-//   ["8", "๘"],
-//   ["9", "๙"],
-// ]); //ทำเป็น array เทียบช่องเลยก็ได้มั้ง
-
 const thaiNumbers = new Array("๐", "๑", "๒", "๓", "๔", "๕", "๖", "๗", "๘", "๙");
 
 function convertNum(numInput) {
@@ -55,72 +42,104 @@ const digits = new Array(
   "เก้า"
 );
 
-function convertRead(input) {
-  input = input.replace(/[^\d.-]/g, "");
+/**
+ * @param input {string}
+ */
+function convertToRead(input) {
+  input = input.replace(/[^\d.+-]/g, "");
 
+  let values = input.split(".");
   let result = "";
-  let counter = 0;
 
-  for (const i of input) {
-    if (i == ".") {
-      break;
-    }
-
-    counter++;
+  if (values.length > 2) {
+    console.log("Error");
+    return null;
   }
 
-  for (const ch of input) {
+  const integral = values[0];
+  let fraction = values[1];
+
+  const matches = integral.match(/^([+-]*)(\d*)$/);
+
+  if (!matches) {
+    console.log("Integral Format Error");
+    return null;
+  }
+  const signs = matches[1];
+  const numeric = matches[2];
+
+  let isNegative = signs.split("").filter((c) => c === "-").length % 2 !== 0;
+
+  let decimal = undefined;
+
+  let integer = Number(numeric);
+  let unitsLength = integer.toString().length;
+
+  if (fraction !== undefined) {
+    //แปลง float ให้เป็น number (ถ้ามี)
+    fraction = "0." + fraction;
+    decimal = Number(fraction);
+  }
+
+  if (isNaN(decimal)) {
+    //มีอักขระ +- คั่นระหว่างตัวเลขทศนิยม
+    // --1200
+    console.log("Fraction Format Incorrect");
+    return null;
+  }
+
+  for (let counter = unitsLength; counter > 0; counter--) {
     let place = counter % 6;
     let isOnes = place == 1;
     let isTens = place == 2;
+    let unitValue = 10 ** (counter - 1);
+    let num = Math.floor(integer / unitValue);
 
-    if (counter == 0 && result == "") {
-      result += "ศูนย์";
-    }
+    integer -= num * unitValue;
 
-    if (ch == ".") {
-      result += "จุด";
+    if (result != "" && isOnes && num == 1) {
+      //เติมคำลงท้ายว่าเอ็ด
+      result += "เอ็ด";
+    } else if (isTens && (num == 2 || num == 1)) {
+      if (num == 2) {
+        result += "ยี่";
+      }
+    } else if (num != 0) {
+      result += digits[num];
+    } else {
+      if (counter >= 7 && isOnes && result != "") {
+        result += "ล้าน";
+      }
+
+      if (counter == 1 && result == "") {
+        result += "ศูนย์";
+      }
       continue;
     }
 
-    if (counter > 0) {
-      //เลขจำนวนเต็ม
-      let num = parseInt(ch);
-
-      if (result != "" && isOnes && num == 1) {
-        //เติมคำลงท้ายว่าเอ็ด
-        result += "เอ็ด";
-      } else if (isTens && (num == 2 || num == 1)) {
-        if (num == 2) {
-          result += "ยี่";
-        }
-      } else if (num != 0) {
-        result += digits[num];
-      } else {
-        if (counter >= 7 && isOnes && result != "") {
-          result += "ล้าน";
-        }
-
-        if (counter == 1 && result == "") {
-          result += "ศูนย์";
-        }
-
-        counter--;
-        continue;
-      }
-
-      if (counter > 7) {
-        result += isOnes ? "ล้าน" : units[place];
-      } else {
-        result += units[counter];
-      }
-
-      counter--;
-      continue;
+    if (counter > 7) {
+      result += isOnes ? "ล้าน" : units[place];
+    } else {
+      result += units[counter];
     }
 
-    // ทศนิยม
-    result += digits[parseInt(ch)];
+    continue;
+  }
+
+  if (decimal != 0) {
+    result += result == "" ? "ศูนย์จุด" : "จุด";
+
+    decimalConvert = decimal.toString();
+    decimalConvert = decimalConvert.replace("0.", "");
+
+    for (const ch of decimalConvert) {
+      result += digits[Number(ch)];
+    }
+  }
+
+  if (isNegative && result != "ศูนย์") {
+    //เป็นจำนวนติดลบ และไม่ได้มีค่าเป็น 0
+    result = "ลบ" + result;
   }
 
   return result;
@@ -128,4 +147,4 @@ function convertRead(input) {
 
 let userInput = "1111,0$0  0.5  0  ";
 
-console.log(convertRead("   .90 "));
+console.log(convertToRead("-+-.05"));

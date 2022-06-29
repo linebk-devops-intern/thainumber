@@ -1,0 +1,19 @@
+{
+  "name": "thainumber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linebk-devops-intern/thainumber.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/linebk-devops-intern/thainumber/issues"
+  },
+  "homepage": "https://github.com/linebk-devops-intern/thainumber#readme"
+}
