@@ -1,23 +1,19 @@
-const express = require("express");
-
 const thaiNumbers = new Array("๐", "๑", "๒", "๓", "๔", "๕", "๖", "๗", "๘", "๙");
 
-function convertNum(numInput) {
+function convertToThaiNum(input: string) {
+  if (input === undefined) {
+    return null;
+  }
+
   let result = "";
+  const arabic = "0123456789";
 
-  for (const i of numInput) {
-    if (i == ".") {
-      result += ".";
-      continue;
-    }
-
-    result += thaiNumbers[parseInt(i)];
+  for (const i of input) {
+    result += arabic.includes(i) ? thaiNumbers[Number(i)] : i;
   }
 
   return result;
 }
-
-console.log(convertNum("123.45"));
 
 // ถ้ามากกว่า 7 %6 เอา //9 = ร้อย, 10 = พัน, 11 = หมื่น %6 = 5
 const units = new Array(
@@ -44,10 +40,11 @@ const digits = new Array(
   "เก้า"
 );
 
-/**
- * @param input {string}
- */
-function convertToRead(input) {
+function convertToRead(input: string) {
+  if (input === undefined || input == "") {
+    return;
+  }
+
   input = input.replace(/[^\d.+-]/g, "");
 
   let values = input.split(".");
@@ -55,7 +52,7 @@ function convertToRead(input) {
 
   if (values.length > 2) {
     console.log("Error");
-    return null;
+    return;
   }
 
   const integral = values[0];
@@ -65,8 +62,9 @@ function convertToRead(input) {
 
   if (!matches) {
     console.log("Integral Format Error");
-    return null;
+    return;
   }
+
   const signs = matches[1];
   const numeric = matches[2];
 
@@ -87,7 +85,7 @@ function convertToRead(input) {
     //มีอักขระ +- คั่นระหว่างตัวเลขทศนิยม
     // --1200
     console.log("Fraction Format Incorrect");
-    return null;
+    return;
   }
 
   for (let counter = unitsLength; counter > 0; counter--) {
@@ -131,8 +129,7 @@ function convertToRead(input) {
   if (decimal != 0) {
     result += result == "" ? "ศูนย์จุด" : "จุด";
 
-    decimalConvert = decimal.toString();
-    decimalConvert = decimalConvert.replace("0.", "");
+    const decimalConvert = decimal.toString().replace("0.", "");
 
     for (const ch of decimalConvert) {
       result += digits[Number(ch)];
@@ -147,14 +144,14 @@ function convertToRead(input) {
   return result;
 }
 
-/**
- * @param input {string}
- */
+function convertToBaht(input: string) {
+  if (input === undefined) {
+    return null;
+  }
 
-function convertToBaht(input) {
   const matches = input.match(/^([+-]*)(\d*.\d*)$/);
-  
-  if(!matches){
+
+  if (!matches) {
     console.log("Format Error");
     return null;
   }
@@ -168,7 +165,7 @@ function convertToBaht(input) {
   let money = roundNumbers.split(".");
 
   let baht = convertToRead(money[0]) + "บาท";
-  let stang = "ศูนย์";
+  let stang: string | undefined = "ศูนย์";
 
   if (money[1] != undefined) {
     stang = convertToRead(money[1]);
@@ -178,14 +175,11 @@ function convertToBaht(input) {
   //   let result = [baht , stang].join('บาท')
   return (
     (isNegative ? "ลบ" : "") +
-    ((baht !== "ศูนย์บาท" || (baht === "ศูนย์บาท" && stang === "ศูนย์")) ? baht : "") +
+    (baht !== "ศูนย์บาท" || (baht === "ศูนย์บาท" && stang === "ศูนย์")
+      ? baht
+      : "") +
     (stang === "ศูนย์" ? "ถ้วน" : stang + "สตางค์")
   );
 }
 
-let userInput = "1111,0$0  0.5  0  ";
-
-console.log(convertToRead("-1234"));
-console.log(convertToBaht("---+--0.5"));
-
-// module.exports = app;
+export { convertToThaiNum, convertToBaht, convertToRead };
