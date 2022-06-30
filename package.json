@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/linebk-devops-intern/thainumber/issues"
   },
-  "homepage": "https://github.com/linebk-devops-intern/thainumber#readme"
+  "homepage": "https://github.com/linebk-devops-intern/thainumber#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
