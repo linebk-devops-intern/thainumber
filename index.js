@@ -1,3 +1,5 @@
+const express = require("express");
+
 const thaiNumbers = new Array("๐", "๑", "๒", "๓", "๔", "๕", "๖", "๗", "๘", "๙");
 
 function convertNum(numInput) {
@@ -70,7 +72,7 @@ function convertToRead(input) {
 
   let isNegative = signs.split("").filter((c) => c === "-").length % 2 !== 0;
 
-  let decimal = undefined;
+  let decimal = 0;
 
   let integer = Number(numeric);
   let unitsLength = integer.toString().length;
@@ -145,6 +147,45 @@ function convertToRead(input) {
   return result;
 }
 
+/**
+ * @param input {string}
+ */
+
+function convertToBaht(input) {
+  const matches = input.match(/^([+-]*)(\d*.\d*)$/);
+  
+  if(!matches){
+    console.log("Format Error");
+    return null;
+  }
+
+  let signs = matches[1];
+  let vals = matches[2];
+  let values = Number(vals);
+  let isNegative = signs.split("").filter((c) => c === "-").length % 2 !== 0;
+
+  let roundNumbers = values.toFixed(2).toString();
+  let money = roundNumbers.split(".");
+
+  let baht = convertToRead(money[0]) + "บาท";
+  let stang = "ศูนย์";
+
+  if (money[1] != undefined) {
+    stang = convertToRead(money[1]);
+  }
+  isNegative = isNegative && baht != "ศูนย์" && stang !== "ศูนย์";
+
+  //   let result = [baht , stang].join('บาท')
+  return (
+    (isNegative ? "ลบ" : "") +
+    (baht !== "ศูนย์บาท" ? baht : "") +
+    (stang === "ศูนย์" ? "ถ้วน" : stang + "สตางค์")
+  );
+}
+
 let userInput = "1111,0$0  0.5  0  ";
 
-console.log(convertToRead("-+-.05"));
+console.log(convertToRead("-1234"));
+console.log(convertToBaht("---+--0000.05"));
+
+// module.exports = app;
