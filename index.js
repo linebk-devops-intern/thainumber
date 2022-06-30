@@ -178,7 +178,7 @@ function convertToBaht(input) {
   //   let result = [baht , stang].join('บาท')
   return (
     (isNegative ? "ลบ" : "") +
-    (baht !== "ศูนย์บาท" ? baht : "") +
+    ((baht !== "ศูนย์บาท" || (baht === "ศูนย์บาท" && stang === "ศูนย์")) ? baht : "") +
     (stang === "ศูนย์" ? "ถ้วน" : stang + "สตางค์")
   );
 }
@@ -186,6 +186,6 @@ function convertToBaht(input) {
 let userInput = "1111,0$0  0.5  0  ";
 
 console.log(convertToRead("-1234"));
-console.log(convertToBaht("---+--0000.05"));
+console.log(convertToBaht("---+--0.5"));
 
 // module.exports = app;
