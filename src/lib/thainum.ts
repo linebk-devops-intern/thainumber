@@ -183,3 +183,5 @@ function convertToBaht(input: string) {
 }
 
 export { convertToThaiNum, convertToBaht, convertToRead };
+
+

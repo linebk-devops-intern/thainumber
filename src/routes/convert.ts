@@ -6,7 +6,7 @@ const router = express.Router();
 router.post("/thainumber", (req, res) => {
   const input = req.body.input;
 
-  if (input === undefined) {
+  if (typeof input !== 'string') {
     res.status(400).send("Error");
     return;
   }
