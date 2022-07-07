@@ -46,7 +46,7 @@ function convertToRead(input: string) {
   }
 
   input = input.replace(/[^\d.+-]/g, "");
-
+  
   let values = input.split(".");
   let result = "";
 
@@ -72,8 +72,7 @@ function convertToRead(input: string) {
 
   let decimal = 0;
 
-  let integer = Number(numeric);
-  let unitsLength = integer.toString().length;
+  let unitsLength = numeric.length;
 
   if (fraction !== undefined) {
     //แปลง float ให้เป็น number (ถ้ามี)
@@ -92,10 +91,8 @@ function convertToRead(input: string) {
     let place = counter % 6;
     let isOnes = place == 1;
     let isTens = place == 2;
-    let unitValue = 10 ** (counter - 1);
-    let num = Math.floor(integer / unitValue);
-
-    integer -= num * unitValue;
+    let index = unitsLength - counter;
+    let num = Number(numeric[index]);
 
     if (result != "" && isOnes && num == 1) {
       //เติมคำลงท้ายว่าเอ็ด
@@ -146,31 +143,45 @@ function convertToRead(input: string) {
 
 function convertToBaht(input: string) {
   if (input === undefined) {
-    return null;
+    return;
   }
+  input = input.replace(/[^\d.+-]/g, "");
 
   const matches = input.match(/^([+-]*)(\d*.\d*)$/);
 
   if (!matches) {
     console.log("Format Error");
-    return null;
+    return;
   }
+
+  console.log(matches);
 
   let signs = matches[1];
   let vals = matches[2];
   let values = Number(vals);
   let isNegative = signs.split("").filter((c) => c === "-").length % 2 !== 0;
 
-  let roundNumbers = values.toFixed(2).toString();
-  let money = roundNumbers.split(".");
+  // let roundNumbers = values.toFixed(2).toString();
+  let money = matches[2].split(".");
 
-  let baht = convertToRead(money[0]) + "บาท";
+  let bahtread = convertToRead(money[0]);
+  if(bahtread === undefined && money[1] === undefined){
+    return;
+  }
+
+  let baht = (bahtread ?? "ศูนย์") + "บาท";
   let stang: string | undefined = "ศูนย์";
 
   if (money[1] != undefined) {
-    stang = convertToRead(money[1]);
+    //สตางค์
+    let decimal = Number("0." + money[1])
+      .toFixed(2)
+      .toString()
+      .replace("0.", "");
+
+    stang = convertToRead(decimal);
   }
-  isNegative = isNegative && baht != "ศูนย์" && stang !== "ศูนย์";
+  isNegative = isNegative && (baht !== "ศูนย์บาท" || stang !== "ศูนย์");
 
   //   let result = [baht , stang].join('บาท')
   return (
@@ -183,5 +194,3 @@ function convertToBaht(input: string) {
 }
 
 export { convertToThaiNum, convertToBaht, convertToRead };
-
-
