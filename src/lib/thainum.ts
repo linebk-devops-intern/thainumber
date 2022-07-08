@@ -154,8 +154,6 @@ function convertToBaht(input: string) {
     return;
   }
 
-  console.log(matches);
-
   let signs = matches[1];
   let vals = matches[2];
   let values = Number(vals);
