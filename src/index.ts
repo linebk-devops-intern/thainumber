@@ -4,6 +4,7 @@ import convert from "./routes/convert";
 import dotenv from "dotenv";
 import { AddressInfo } from "net";
 import path from "path";
+import cors from "cors";
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
