@@ -20,7 +20,7 @@ function App() {
   return (
     <div onSubmit={handleSubmit}>
       <input type = "text" value ={userint}  onChange={e =>setUserint(e.target.value)}  />
-      <button type='button' class='button' onClick={tranform}>Tranfer</button>   
+      <button type='button' className='button' onClick={tranform}>Tranfer</button>   
       <br></br>{posts.thaiNum}  
       <br></br>{posts.text}  
       <br></br>{posts.currencyText}
