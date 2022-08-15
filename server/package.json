@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/linebk-devops-intern/thainumber#readme",
   "dependencies": {
+    "@types/cors": "^2.8.12",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
