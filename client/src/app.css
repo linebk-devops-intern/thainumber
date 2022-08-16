@@ -1,3 +1,7 @@
+*{
+    background-color: antiquewhite;
+}
+
 .button {
     background-color: #afb1af; /* Green */
     border: none;
@@ -9,7 +13,7 @@
 }
 div {
     width: 300px;  
-    border: 15px solid green;  
+    border: 15px solid rgb(14, 178, 207);  
     padding: 10px;     
     margin: 10px;      
     background-color: bisque;    
