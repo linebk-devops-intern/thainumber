@@ -2,6 +2,12 @@
     background-color: antiquewhite;
 }
 
+.input{
+    background: #bafaba ;
+    border-radius: 15px;
+    height: 30px;
+}
+
 .button {
     background-color: #afb1af; /* Green */
     border: none;
@@ -10,11 +16,22 @@
     text-align: center;
     text-decoration: none;
     font-size: 16px;
+    cursor: pointer;
+    border-radius: 15px;
+    touch-action: manipulation;
 }
-div {
-    width: 300px;  
-    border: 15px solid rgb(14, 178, 207);  
-    padding: 10px;     
-    margin: 10px;      
-    background-color: bisque;    
-}
+.button:hover,
+.button:focus {
+    background-color: #F082AC;
+  }
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .box div {
+    width: 100px;
+    height: 100px;
+  }
+
